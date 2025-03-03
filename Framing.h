@@ -87,6 +87,8 @@
 
   #define CMD_SEL_INT     0x1F
 
+  #define CMD_BRD_LOC     0x1A
+
   #define DETECT_REQ      0x73
   #define DETECT_RESP     0x46
 

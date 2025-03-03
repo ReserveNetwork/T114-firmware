@@ -1591,7 +1591,7 @@ void loop() {
   #if HAS_GPS
     while (gps_s.available() > 0) {
       if (gps.encode(gps_s.read()) && millis() - last_gps >= GPS_INTERVAL) {
-          kiss_indicate_location();
+          kiss_indicate_location(false);
           last_gps = millis();
       }
     }
@@ -1675,6 +1675,8 @@ void button_event(uint8_t event, unsigned long duration) {
         #if HAS_BLUETOOTH || HAS_BLE
           if (bt_state != BT_STATE_CONNECTED) { bt_enable_pairing(); }
         #endif
+      } else if (duration > 3000) {
+          kiss_indicate_location(true);
       } else if (duration > 700) {
         #if HAS_SLEEP
           sleep_now();

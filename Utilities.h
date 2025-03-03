@@ -1716,7 +1716,13 @@ void unlock_rom() {
 	eeprom_erase();
 }
 
-void kiss_indicate_location() {
+void kiss_broadcast_location() {
+    serial_write(FEND);
+    serial_write(CMD_BRD_LOC);
+    serial_write(FEND);
+}
+
+void kiss_indicate_location(bool broadcast) {
     char location[10];
     int len;
     int32_t val;
@@ -1740,6 +1746,10 @@ void kiss_indicate_location() {
         escaped_serial_write(val>>8);
         escaped_serial_write(val);
         serial_write(FEND);
+
+        if (broadcast) {
+            kiss_broadcast_location();
+        }
     }
 }
 
