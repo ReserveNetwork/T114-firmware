@@ -18,6 +18,10 @@
 #define DISP_W 128
 #define DISP_H 64
 
+#if HAS_GPS
+#include "src/misc/gps.hpp"
+#endif
+
 #if DISPLAY == OLED
 #include <Wire.h>
 #include <Adafruit_SSD1306.h>
@@ -630,6 +634,18 @@ void draw_lora_icon(RadioInterface* radio, int px, int py) {
     }
 }
 
+void draw_gps_icon(int px, int py) {
+    if (gps_state == GPS_ONLINE) {
+        display.drawRGBBitmap(ceil(px * DISPLAY_SCALE), ceil(py * DISPLAY_SCALE), bm_gps + (2 * (32*34) - 32*2), 32, 34);
+    } else if (gps_state == GPS_INDETERMINATE) {
+        display.drawRGBBitmap(ceil(px * DISPLAY_SCALE), ceil(py * DISPLAY_SCALE), bm_gps, 32, 34);
+    } else if (gps_state == GPS_LOCKED) {
+        display.drawRGBBitmap(ceil(px * DISPLAY_SCALE), ceil(py * DISPLAY_SCALE), bm_gps + (3 * (32*34) - 32*2), 32, 34);
+    } else if (gps_state == GPS_OFFLINE) {
+        display.drawRGBBitmap(ceil(px * DISPLAY_SCALE), ceil(py * DISPLAY_SCALE), bm_gps + (1 * (32*34) - 32*2), 32, 34);
+    }
+}
+
 void draw_mw_icon(int px, int py) {
   if (INTERFACE_COUNT >= 2) {
       if (interface_obj[1]->getRadioOnline()) {
@@ -839,9 +855,13 @@ void draw_stat_area() {
     draw_lora_icon(interface_obj[0], 45, 8);
 
     // todo, expand support to show more than two interfaces on screen
-    if (INTERFACE_COUNT > 1) {
-        draw_lora_icon(interface_obj[1], 45, 30);
-    }
+    //if (INTERFACE_COUNT > 1) {
+    //    draw_lora_icon(interface_obj[1], 45, 30);
+    //}
+
+    // fixme, there is a bug with drawing at the correct coordinates on this board with RGB graphics
+    draw_gps_icon(53, 125);
+    
     draw_battery_bars(4, 58);
     radio_online = false;
     for (int i = 0; i < INTERFACE_COUNT; i++) {

@@ -62,7 +62,7 @@ uint8_t eeprom_read(uint32_t mapped_addr);
 #endif
 
 #if HAS_GPS
-    #include "src/misc/gps.h"
+    #include "src/misc/gps.hpp"
 #endif
 
 #if MCU_VARIANT == MCU_ESP32 || MCU_VARIANT == MCU_NRF52

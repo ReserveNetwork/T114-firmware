@@ -1590,15 +1590,21 @@ void loop() {
 
   #if HAS_GPS
     while (gps_s.available() > 0) {
+      if (gps_state != GPS_ONLINE) {
+          gps_state = GPS_ONLINE; 
+      }
+
+      if (gps_state != GPS_LOCKED && gps.location.isValid()) {
+            gps_state = GPS_LOCKED;
+      }
+      
       if (gps.encode(gps_s.read()) && millis() - last_gps >= GPS_INTERVAL) {
           kiss_indicate_location(false);
           last_gps = millis();
       }
     }
     if (millis() > 5000 && gps.charsProcessed() < 10) {
-        while (true) {
-            Serial.println(F("No GPS detected: check wiring."));
-        }
+        gps_state = GPS_OFFLINE;
     }
   #endif
 

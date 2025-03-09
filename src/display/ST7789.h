@@ -285,6 +285,25 @@ class ST7789Spi : public OLEDDisplay {
   void displayOff(void) {
   //sendCommand(DISPLAYOFF);
   }
+
+  void writePixel(int16_t x, int16_t y, uint16_t color) {
+      //if ((x >= 0) && (x < _width) && (y >= 0) && (y < _height)) {
+          setAddrWindow(x, y, 1, 1);
+          SPI_WRITE16(color);
+      //}
+  }
+
+  void drawRGBBitmap(int16_t x, int16_t y, const short unsigned int *bitmap, int16_t w, int16_t h) {
+    set_CS(LOW);
+    _spi->beginTransaction(_spiSettings);
+    for (int16_t j = 0; j < h; j++, y++) {
+        for (int16_t i = 0; i < w; i++) {
+            writePixel(x + i, y, bitmap[j * w + i]);
+        }
+    }
+    _spi->endTransaction();
+    set_CS(HIGH);
+  }
   
 //#define ST77XX_MADCTL_MY 0x80
 //#define ST77XX_MADCTL_MX 0x40
@@ -382,6 +401,11 @@ class ST7789Spi : public OLEDDisplay {
         _spi->endTransaction();
         digitalWrite(_cs, HIGH);
     }
+   void SPI_WRITE16(uint16_t l)
+   {
+      _spi->transfer(l >> 8);
+      _spi->transfer(l);
+   }
    void SPI_WRITE32(uint32_t l)
    {
       _spi->transfer(l >> 24);

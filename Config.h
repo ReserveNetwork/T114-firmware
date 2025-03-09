@@ -141,6 +141,8 @@
     bool eeprom_ok = false;
     bool firmware_update_mode = false;
 
+    uint8_t gps_state = 0;
+
 	// Boot flags
 	#define START_FROM_BOOTLOADER 0x01
 	#define START_FROM_POWERON    0x02
