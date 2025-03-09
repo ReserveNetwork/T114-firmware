@@ -511,6 +511,6 @@ release-heltec_t114:
 
 release-heltec_t114_gps:
 	arduino-cli compile --fqbn Heltec_nRF52:Heltec_nRF52:HT-n5262 $(COMMON_BUILD_FLAGS) --build-property "compiler.cpp.extra_flags=\"-DBOARD_MODEL=0x3C\" \"-DBOARD_VARIANT=0xCB\""
-	cp build/Heltec_nRF52.Heltec_nRF52.HT-n5262/RNode_Firmware_CE.ino.hex build/rnode_firmware_heltec_t114.hex
-	adafruit-nrfutil dfu genpkg --dev-type 0x0052 --application build/rnode_firmware_heltec_t114.hex Release/rnode_firmware_heltec_t114.zip
+	cp build/Heltec_nRF52.Heltec_nRF52.HT-n5262/T114-firmware.ino.hex build/t114.hex
+	adafruit-nrfutil dfu genpkg --dev-type 0x0052 --application build/t114.hex Release/t114.zip
 	rm -r build
