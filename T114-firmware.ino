@@ -17,6 +17,8 @@
 #include <SPI.h>
 #include "Utilities.h"
 
+#define Serial Serial1
+
 #if MCU_VARIANT == MCU_NRF52
   #if BOARD_MODEL == BOARD_RAK4631 || BOARD_MODEL == BOARD_OPENCOM_XL
       #define INTERFACE_SPI
