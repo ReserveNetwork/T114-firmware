@@ -17,8 +17,6 @@
 #include <SPI.h>
 #include "Utilities.h"
 
-#define Serial Serial1
-
 #if MCU_VARIANT == MCU_NRF52
   #if BOARD_MODEL == BOARD_RAK4631 || BOARD_MODEL == BOARD_OPENCOM_XL
       #define INTERFACE_SPI
@@ -1732,10 +1730,10 @@ void buffer_serial() {
     #if HAS_BLUETOOTH || HAS_BLE == true
     while (
       c < MAX_CYCLES &&
-      ( (bt_state != BT_STATE_CONNECTED && Serial.available()) || (bt_state == BT_STATE_CONNECTED && SerialBT.available()) )
-      )
+      ( (bt_state != BT_STATE_CONNECTED && (Serial.available() || Serial1.available()) || (bt_state == BT_STATE_CONNECTED && SerialBT.available()) )
+      ))
     #else
-    while (c < MAX_CYCLES && Serial.available())
+    while (c < MAX_CYCLES && (Serial.available() || Serial1.available()))
     #endif
     {
       c++;
@@ -1747,12 +1745,20 @@ void buffer_serial() {
           }
         } else {
           if (!fifo_isfull(&serialFIFO)) {
-            fifo_push(&serialFIFO, Serial.read());
+              if (Serial.available()) {
+                  fifo_push(&serialFIFO, Serial.read());
+              } else {
+                  fifo_push(&serialFIFO, Serial1.read());
+              }
           }
         }
       #else
         if (!fifo_isfull(&serialFIFO)) {
-          fifo_push(&serialFIFO, Serial.read());
+            if (Serial.available()) {
+                fifo_push(&serialFIFO, Serial.read());
+            } else {
+                fifo_push(&serialFIFO, Serial1.read());
+            }
         }
       #endif
     }

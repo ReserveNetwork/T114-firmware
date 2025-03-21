@@ -720,6 +720,7 @@ void serial_write(uint8_t byte) {
 		}
 	#else
 		Serial.write(byte);
+		Serial1.write(byte);
 	#endif
 }
 
