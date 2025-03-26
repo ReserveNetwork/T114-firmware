@@ -709,6 +709,7 @@ void serial_write(uint8_t byte) {
 	#if HAS_BLUETOOTH || HAS_BLE == true
 		if (bt_state != BT_STATE_CONNECTED) {
 			Serial.write(byte);
+            Serial1.write(byte);
 		} else {
 			SerialBT.write(byte);
       #if MCU_VARIANT == MCU_NRF52 && HAS_BLE

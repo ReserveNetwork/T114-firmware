@@ -160,6 +160,7 @@ void setup() {
   fifo_init(&serialFIFO, serialBuffer, CONFIG_UART_BUFFER_SIZE);
 
   Serial.begin(serial_baudrate);
+  Serial1.begin(serial_baudrate);
 
   #if HAS_NP
     led_init();
