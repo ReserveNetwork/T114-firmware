@@ -617,20 +617,12 @@ void draw_bt_icon(int px, int py) {
 
 void draw_lora_icon(RadioInterface* radio, int px, int py) {
   // todo: make display show other interfaces
-  if (radio_online) {
-    if (online_interface_list[interface_page] != radio->getIndex()) {
-      stat_area.drawBitmap(px - 1, py - 1, bm_dot_sqr, 18, 19, DISPLAY_WHITE, DISPLAY_BLACK);
-
-      // redraw stat area on next refresh
-      stat_area_initialised = false;
-    }
     if (radio->getRadioOnline()) {
-      stat_area.drawBitmap(px, py, bm_rf+1*32, 16, 16, DISPLAY_WHITE, DISPLAY_BLACK);
+        display.drawRGBBitmap(ceil(px * DISPLAY_SCALE), ceil(py * DISPLAY_SCALE), bm_rf+ (3 * (32*34) - 32*2), 32, 34);
+    } else if (!modems_installed) {
+        display.drawRGBBitmap(ceil(px * DISPLAY_SCALE), ceil(py * DISPLAY_SCALE), bm_rf+ (1 * (32*34) - 32*2), 32, 34);
     } else {
-      stat_area.drawBitmap(px, py, bm_rf+0*32, 16, 16, DISPLAY_WHITE, DISPLAY_BLACK);
-    }
-    } else {
-      stat_area.drawBitmap(px, py, bm_rf+0*32, 16, 16, DISPLAY_WHITE, DISPLAY_BLACK);
+        display.drawRGBBitmap(ceil(px * DISPLAY_SCALE), ceil(py * DISPLAY_SCALE), bm_rf+ (2 * (32*34) - 32*2), 32, 34);
     }
 }
 
@@ -644,18 +636,6 @@ void draw_gps_icon(int px, int py) {
     } else if (gps_state == GPS_OFFLINE) {
         display.drawRGBBitmap(ceil(px * DISPLAY_SCALE), ceil(py * DISPLAY_SCALE), bm_gps + (1 * (32*34) - 32*2), 32, 34);
     }
-}
-
-void draw_mw_icon(int px, int py) {
-  if (INTERFACE_COUNT >= 2) {
-      if (interface_obj[1]->getRadioOnline()) {
-          stat_area.drawBitmap(px, py, bm_rf+3*32, 16, 16, DISPLAY_WHITE, DISPLAY_BLACK);
-      } else {
-          stat_area.drawBitmap(px, py, bm_rf+2*32, 16, 16, DISPLAY_WHITE, DISPLAY_BLACK);
-      }
-  } else {
-      stat_area.drawBitmap(px, py, bm_rf+2*32, 16, 16, DISPLAY_WHITE, DISPLAY_BLACK);
-  }
 }
 
 uint8_t charge_tick = 0;
@@ -852,7 +832,7 @@ void draw_stat_area() {
 
     draw_cable_icon(3, 8);
     draw_bt_icon(3, 30);
-    draw_lora_icon(interface_obj[0], 45, 8);
+    draw_lora_icon(interface_obj[0], 53, 103);
 
     // todo, expand support to show more than two interfaces on screen
     //if (INTERFACE_COUNT > 1) {
